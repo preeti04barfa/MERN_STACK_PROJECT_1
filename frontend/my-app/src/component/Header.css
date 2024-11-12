@@ -1,0 +1,63 @@
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+
+    background-color: rgb(192, 207, 157);
+    height: 8vh;
+    padding-left: 75%;
+  }
+  
+  
+  .icons {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-profile {
+    margin-left: 15px;
+    cursor: pointer;
+  }
+  
+  
+  .MuiInputBase-input {
+    width: max-content;
+    padding-right: 60px;
+  }
+  
+  .avatar-img {
+    width: 45px;
+    height: 45px;
+    margin-top: 5px;
+    border-radius: 50%;
+    margin-left: 15px;
+  }
+  
+  .user-profile{
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .login {
+    background: none;
+    cursor: pointer;
+    color: black;
+    background-color:  rgb(186, 218, 243);
+    font-size: 12px;
+    height: 35px;
+    line-height: 5px;
+    width: 70px;
+    text-align: center;
+    border: 1px solid rgb(186, 218, 243);;
+    display: block;
+  margin-left: 10px;
+  }
+  .login:hover{
+    background-color: rgb(242, 212, 242);
+  }
+  
+  .welcome{
+    color:rgb(98, 95, 95);
+    padding-right: 6px;
+  }
