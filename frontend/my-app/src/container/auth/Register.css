@@ -1,0 +1,121 @@
+.main-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    background-color: #f0f2f5;
+}
+
+.left-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #fff;
+}
+
+.right-container {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+}
+
+.right-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 3rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    min-height: 550px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-container h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.register-form .email,
+.register-form .password,
+.register-form .number,
+.register-form .name {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.register-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.register-actions p {
+    margin: 0;
+    margin-right: 0.5rem;
+}
+
+.register-actions a {
+    color: #3f51b5;
+    text-decoration: none;
+}
+
+.register-actions a:hover {
+    text-decoration: underline;
+}
+
+.login-btn {
+    width: 100%;
+    background-color: #3f51b5;
+    color: #fff;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.login-btn:hover {
+    background-color: #303f9f;
+}
+
+.forgot-password {
+    color: #3f51b5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    text-align: right;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .left-container,
+    .right-container {
+        width: 100%;
+    }
+
+    .form-container {
+        padding: 2rem;
+    }
+}

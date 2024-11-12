@@ -1,0 +1,45 @@
+.side-bar {
+    background-color: rgb(192, 207, 157);
+    /* background: linear-gradient(0deg,  rgba(200,226,247,1)23%,    rgba(247,200,247,1) 100%); */
+
+    width: 200px; 
+    height: 93vh;
+    padding: 20px; 
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+}
+
+.dashboard-text, .task-text {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    color: #333;
+}
+
+.dashboard-text:hover, .task-text:hover{
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.task-text {
+    margin-top: 10px;
+}
+
+.task-text:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.icon{
+    padding-right: 30px;
+}
+
+.side-bar{
+    overflow: auto;
+}
+
+.logo{
+    /* margin-bottom: 20px; */
+    color: #333;
+    /* font-size: 1.5rem; */
+    font-weight: bold;
+}
