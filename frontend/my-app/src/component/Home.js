@@ -9,15 +9,15 @@ import Header from './Header';
 const Home = () => {
   return (
     <>
-      <Box><Header/></Box>
-    <Box className="main-sidebar">
-    <Box>
-      <Sidebar/>
-    </Box>
-    <Box>
-        <Outlet/>
-    </Box>
-    </Box>
+      <Box className="header-main"><Header /></Box>
+      <Box className="main-sidebar">
+        <Box>
+          <Sidebar />
+        </Box>
+        <Box>
+          <Outlet />
+        </Box>
+      </Box>
     </>
   )
 }
