@@ -11,7 +11,7 @@ const Sidebar = () => {
     return (
         <Box className="sidebar-main">
             <Box className="side-bar">
-            <Box className="logo"><h2>Demo</h2></Box>
+            {/* <Box className="logo"><h2>Demo</h2></Box> */}
                 <Box
                     className="dashboard-text"
                     onClick={() => navigate('/admin/dashboard')}

@@ -1,5 +1,5 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Register from '../container/auth/Register';
 import Dashboard from '../container/dashboard/Dashboard';
@@ -9,6 +9,7 @@ import Footer from '../component/Footer';
 import Sidebar from '../component/Sidebar';
 import Home from '../component/Home';
 import MyTask from '../container/myTask/MyTask';
+import PrivateRouter from './PrivateRouter';
 
 const Router = () => {
   return (
@@ -16,19 +17,13 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/header" element={<Header />} />
-        <Route path="/footer" element={<Footer />} />
-        <Route path="/sidebar" element={<Sidebar />} />
-        <Route path="admin/" element={<Home />}>
+        <Route path="/admin" element={ <PrivateRouter><Home /></PrivateRouter>}>
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="MyTask" element={<MyTask />} />
-        
-          
+          <Route path="mytask" element={<MyTask />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
-export default Router
+export default Router;

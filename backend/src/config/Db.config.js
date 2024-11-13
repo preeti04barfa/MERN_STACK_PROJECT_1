@@ -1,5 +1,4 @@
-import  mongoose from "mongoose";
-import dotenv from 'dotenv';
+import { dotenv, mongoose } from "../index.js";
 dotenv.config();
 const MONGODB_URl = process.env.MONGODB_URL
 export const dataBase = async () =>{

@@ -1,13 +1,15 @@
-import express from 'express'
-import { dataBase } from './src/config/Db.config.js';
+import { cors, dataBase, dotenv, express, userRouter } from './src/index.js';
+
 const app = express()
-import dotenv from 'dotenv';
 dotenv.config();
 const PORT = process.env.PORT
-
 dataBase();
+app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use("/api/user", userRouter)
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port : ${PORT}`);
 })
-  export default app
+export default app
