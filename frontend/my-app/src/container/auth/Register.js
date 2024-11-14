@@ -5,22 +5,30 @@ import { toast } from "react-toastify";
 import sideImage from "./../../assets/jpg/student.jpg";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
-
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import * as Yup from 'yup';
 import { DataService } from '../../config/DataService';
 import { Api } from '../../config/Api';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
-    let initialValues={
-        name: '',
-        number: '',
-        email: '',
-        password: ''
-      }
+  const passwordVisibility = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const initialValues = {
+    name: '',
+    number: '',
+    email: '',
+    password: ''
+  };
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -44,30 +52,37 @@ const Register = () => {
       .required('Password is required')
   });
 
+  const handleNumberKeyDown = (event) => {
+    const key = event.key;
+    if (!/^[0-9]$/.test(key) && key !== 'Backspace' && key !== 'Delete') {
+      event.preventDefault();
+    }
+  };
+
   const handleFormSubmit = async (values) => {
     try {
-        const formData = new URLSearchParams();
-        formData.append("name", values.name);
-        formData.append("number", values.number);
-        formData.append("email", values.email);
-        formData.append("password", values.password);
+      const formData = new URLSearchParams();
+      formData.append("name", values.name);
+      formData.append("number", values.number);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
 
-        const response = await DataService.post(Api.REGISTER_USER, formData);
-        const userData = response.data.data;
-console.log(response.data,"serData");
+      const response = await DataService.post(Api.REGISTER_USER, formData);
+      const userData = response.data.data;
 
-        localStorage.setItem('userData', JSON.stringify(userData));
-        toast.success(response.data.message);
-        navigate('/');
+      localStorage.setItem('userData', JSON.stringify(userData));
+      toast.success(response.data.message);
+      navigate('/');
 
     } catch (error) {
-        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-            toast.error(error.response.data.message);
-        } else {
-            toast.error("An unexpected error occurred");
-        }
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
-};
+  };
+
   return (
     <Box className="main-container">
       <Box className="left-container">
@@ -77,10 +92,9 @@ console.log(response.data,"serData");
           </Box>
 
           <Formik
-          initialValues = {initialValues}
+            initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleFormSubmit}
-        
           >
             {({ handleChange, handleBlur, values, errors, touched }) => (
               <Form className="register-form">
@@ -106,6 +120,7 @@ console.log(response.data,"serData");
                     label="Number"
                     variant="standard"
                     value={values.number}
+                    onKeyDown={handleNumberKeyDown}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.number && Boolean(errors.number)}
@@ -135,13 +150,25 @@ console.log(response.data,"serData");
                     name="password"
                     label="Password"
                     variant="standard"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password}
                     className="password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={passwordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Box>
 

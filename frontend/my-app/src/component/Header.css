@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: rgb(192, 207, 157);
+  background-color: #7d88c5;
   height: 8vh;
   padding-left: 5%;
 }
@@ -37,7 +37,7 @@
   background: none;
   cursor: pointer;
   color: black;
-  background-color:  rgb(192, 207, 157);
+  background-color: #7d88c5;
   font-size: 12px;
   height: 35px;
   line-height: 5px;
@@ -48,8 +48,7 @@
   display: block;
 }
 
-.login:hover {
-  background-color:rgb(189, 205, 156);
+.login:hover {  background-color: #8e98cc;
 }
 
 .welcome {
