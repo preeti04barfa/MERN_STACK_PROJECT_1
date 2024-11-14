@@ -12,6 +12,10 @@ import { dataBase } from "./config/Db.config.js";
 import { User } from "./model/User.js";
 import { userRouter } from "./router/Router.js";
 import cors from "cors";
+import { Task } from "./model/Task.js";
+import { getTask } from "./controller/user/TaskController.js";
+// import { createTask } from "./controller/user/TaskController.js";
+
 
 export {mongoose,express,dataBase, User,jwt, StatusCodes, dotenv, ResponseMessage, bcrypt,
-    handleErrorResponse, sendResponse, auth, RegisterUser,userLogin, getSingleUser, userRouter,cors, refreshToken}
+    handleErrorResponse, sendResponse, auth, RegisterUser,userLogin, getSingleUser, userRouter,cors, refreshToken, Task,getTask}

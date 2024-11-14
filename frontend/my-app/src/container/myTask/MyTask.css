@@ -1,0 +1,122 @@
+
+.task-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.searchtask-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.taskbtn-container .task-btn {
+    background-color: #7d88c5;
+    color: black;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin-left: 670px;
+}
+
+.taskbtn-container .task-btn:hover {
+    background-color: #7d88c5;
+    color: #333;
+}
+
+.task-table {
+    margin-top: 20px;
+}
+
+.MuiTableCell-head {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.search-input {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.task-table th, .task-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.task-table th {
+    background-color: #7d88c5;
+    color: #333;
+    font-weight: bold;
+}
+
+.task-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.task-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.action-btn .model-cancel:hover{
+    color:  #7d88c5;
+}
+
+.action-btn .model-cancel{
+    color:  #646faf;}
+
+.action-btn .model-task:hover{
+    color:  #7d88c5;
+}
+
+.action-btn .model-task{
+    color:  #646faf;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 4px;
+  }
+  
+  .edit{
+    color:rgb(55, 49, 49);
+    padding-right: 4px;
+    cursor: pointer;
+  }
+
+  .edit:hover{
+    color:rgb(18, 18, 18);
+    padding-right: 4px;
+    cursor: pointer;
+  }
+
+  .delete{
+    color:rgb(227, 95, 95);
+    cursor: pointer;
+  }
+
+  .delete:hover{
+    color:rgb(196, 13, 13);
+    cursor: pointer;
+  }

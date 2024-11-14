@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Login.css";
 import Box from '@mui/material/Box';
 import sideImage from "./../../assets/jpg/student.jpg";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -13,7 +17,9 @@ import { DataService } from '../../config/DataService';
 
 const Login = () => {
   const navigate = useNavigate();
-  let initialValues={
+  const [showPassword, setShowPassword] = useState(false);
+
+  let initialValues = {
     email: '',
     password: ''
   }
@@ -27,30 +33,29 @@ const Login = () => {
   });
 
   const handleFormSubmit = async (values) => {
-
     try {
-        const formData = new URLSearchParams();
-        formData.append("email", values.email);
-        formData.append("password", values.password);
+      const formData = new URLSearchParams();
+      formData.append("email", values.email);
+      formData.append("password", values.password);
 
-        const response = await DataService.post(Api.LOGIN_USER, formData);
-        const userData = response.data.data;
+      const response = await DataService.post(Api.LOGIN_USER, formData);
+      const userData = response.data.data;
       const userToken = userData.token;
       const userRefreshToken = userData.refreshToken;
-      
-        localStorage.setItem('userToken', userToken);
-        localStorage.setItem('userRefreshToken', userRefreshToken);
-        toast.success(response.data.message);
-        navigate("admin/")
+
+      localStorage.setItem('userToken', userToken);
+      localStorage.setItem('userRefreshToken', userRefreshToken);
+      toast.success(response.data.message);
+      navigate("admin/");
 
     } catch (error) {
-        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-            toast.error(error.response.data.message);
-        } else {
-            toast.error("An unexpected error occurred");
-        }
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
-};
+  };
 
   return (
     <Box className="main-container">
@@ -89,13 +94,25 @@ const Login = () => {
                     name="password"
                     label="Password"
                     variant="standard"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password}
                     className="password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Box>
 
