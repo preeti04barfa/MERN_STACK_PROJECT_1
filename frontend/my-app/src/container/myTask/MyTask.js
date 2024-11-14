@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,41 +9,134 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import "./MyTask.css";
-
+import { DataService } from '../../config/DataService';
+import { Api } from '../../config/Api';
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 const MyTask = () => {
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({
-    projectName: '',
-    taskName: '',
-    fromDate: '',
-    toDate: '',
-    assignUser: '',
-    duration: ''
+  const [currentTaskId, setCurrentTaskId] = useState(null); 
+  const [editTask, setEditTask] = useState(null); 
+  const [taskData, setTaskData] = useState(null);
+  const navigate = useNavigate();
+
+  const initialValues = {
+    projectName: editTask?.projectName ? editTask?.projectName: '',
+    issueType: editTask?.issueType ? editTask?.issueType: '',
+    shortSummary: editTask?.shortSummary ? editTask?.shortSummary: '',
+    description: editTask?.description ? editTask?.description: '',
+    priority: editTask?.priority ? editTask?.priority: '',
+    assigneer: editTask?.assigneer ? editTask?.assigneer: '',
+    reporter: editTask?.reporter ? editTask?.reporter: '',
+    assignedDate: editTask?.assignedDate ? editTask?.assignedDate: '',
+    dueDate: editTask?.dueDate ? editTask?.dueDate: '',
+    taskDuration: editTask?.taskDuration ? editTask?.taskDuration: '',
+  }
+  const validationSchema = Yup.object({
+    projectName: Yup.string().required('Project name is required'),
+    issueType: Yup.string().required('Issue type is required'),
+    shortSummary: Yup.string().required('Short summary is required'),
+    description: Yup.string().required('Description is required'),
+    priority: Yup.string().required('Priority is required'),
+    assigneer: Yup.string().required('Assigneer is required'),
+    reporter: Yup.string().required('Reporter is required'),
+    assignedDate: Yup.string().required('Assigned Date is required'),
+    dueDate: Yup.string().required('Due Date is required'),
+    taskDuration: Yup.number().required('Task Duration is required'),
   });
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (taskId = null) => {
     setOpen(true);
   };
 
+
+
   const handleClose = () => {
+    setEditTask(null)
     setOpen(false);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewTask((prevTask) => ({
-      ...prevTask,
-      [name]: value
-    }));
+  const handleEditTask = (data)=>{
+    setEditTask(data)
+    setOpen(true);
+  }
+
+  const fetchTaskData = async () => {
+    const token = localStorage.getItem('userToken')
+    try {
+      const response = await DataService.get(Api.GET_ALL_TASK, {
+        headers: {
+          'auth': token,
+        },
+      });
+      setTasks(response.data.data);
+    } catch (error) {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        console.log('Error fetching user data', error.response);
+      } else {
+        console.log('Unexpected error', error);
+      }
+    }
+  };
+  useEffect(() => {
+
+    fetchTaskData();
+  }, []);
+
+
+  const handleFormSubmit = async (values) => {
+    try {
+      let data = {...values}
+      if (editTask) {
+        data = { ...data, id: editTask?._id }
+      }
+      const endPoint = editTask ? Api.EDIT_TASK : Api.ADD_TASK;
+      const token = localStorage.getItem('userToken')
+      const response = await DataService.post(endPoint, data, { headers: { 'auth': token } })
+
+      toast.success(response.data.message);
+      fetchTaskData();
+     handleClose()
+    } catch (error) {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
+  
   };
 
-  const handleAddTask = () => {
-    setTasks([...tasks, newTask]);
-    setNewTask({ projectName: '', taskName: '', fromDate: '', toDate: '', assignUser: '', duration: '' });
-    setOpen(false);
+  const handleDeleteSubmit = async (taskId) => {
+    try {
+      const token = localStorage.getItem('userToken');
+      const response = await DataService.post(
+        Api.DELETE_TASK,
+        { id: taskId },
+        {
+          headers: {
+            'auth': token,
+          }
+        }
+      );
+      toast.success(response.data.message);
+      fetchTaskData();
+
+    } catch (error) {
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
   };
+
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -110,22 +203,32 @@ const MyTask = () => {
           <thead>
             <tr>
               <th>Project Name</th>
-              <th>Task Name</th>
-              <th>From Date</th>
-              <th>To Date</th>
-              <th>Assign User</th>
+              <th>Task Summary</th>
+              <th>Assigned Date</th>
+              <th>Due Date</th>
+              <th>Assigneer</th>
+              <th>Reporter</th>
               <th>Duration</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {tasks.map((task, index) => (
-              <tr key={index}>
+            {tasks && tasks?.map((task, index) => (
+              <tr key={task?._id}>
                 <td>{task.projectName}</td>
-                <td>{task.taskName}</td>
-                <td>{task.fromDate}</td>
-                <td>{task.toDate}</td>
-                <td>{task.assignUser}</td>
-                <td>{task.duration}</td>
+                <td>{task.shortSummary}</td>
+                <td>{task.assignedDate}</td>
+                <td>{task.dueDate}</td>
+                <td>{task.assigneer}</td>
+                <td>{task.reporter}</td>
+                <td>{task.taskDuration}</td>
+                <td> <EditIcon className='edit' onClick={() => handleEditTask(task)} />
+                  <DeleteIcon
+                    className='delete'
+                    onClick={() => handleDeleteSubmit(task._id)}
+                  />
+
+                </td>
               </tr>
             ))}
           </tbody>
@@ -133,78 +236,138 @@ const MyTask = () => {
       </Box>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Task</DialogTitle>
+      <DialogTitle>{editTask ? "Edit Task" : "Add New Task"}</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            label="Project Name"
-            name="projectName"
-            value={newTask.projectName}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Task Name"
-            name="taskName"
-            value={newTask.taskName}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="From Date"
-            name="fromDate"
-            type="date"
-            value={newTask.fromDate}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-
-          />
-          <TextField
-            fullWidth
-            label="To Date"
-            name="toDate"
-            type="date"
-            value={newTask.toDate}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-
-          />
-          <TextField
-            fullWidth
-            label="Assign User"
-            name="assignUser"
-            value={newTask.assignUser}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Task Time Duration"
-            name="duration"
-            value={newTask.duration}
-            onChange={handleInputChange}
-            variant="outlined"
-            margin="normal"
-          />
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleFormSubmit}
+          >
+            {({ handleChange, values, touched, errors }) => (
+              <Form>
+                <TextField
+                  fullWidth
+                  label="Project Name"
+                  name="projectName"
+                  value={values.projectName}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.projectName && Boolean(errors.projectName)}
+                  helperText={touched.projectName && errors.projectName}
+                />
+                <TextField
+                  fullWidth
+                  label="Issue Type"
+                  name="issueType"
+                  value={values.issueType}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.issueType && Boolean(errors.issueType)}
+                  helperText={touched.issueType && errors.issueType}
+                />
+                <TextField
+                  fullWidth
+                  label="Short Summary"
+                  name="shortSummary"
+                  value={values.shortSummary}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.shortSummary && Boolean(errors.shortSummary)}
+                  helperText={touched.shortSummary && errors.shortSummary}
+                />
+                <TextField
+                  fullWidth
+                  label="Description"
+                  name="description"
+                  value={values.description}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.description && Boolean(errors.description)}
+                  helperText={touched.description && errors.description}
+                />
+                <TextField
+                  fullWidth
+                  label="Priority"
+                  name="priority"
+                  value={values.priority}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.priority && Boolean(errors.priority)}
+                  helperText={touched.priority && errors.priority}
+                />
+                <TextField
+                  fullWidth
+                  label="Assigneer"
+                  name="assigneer"
+                  value={values.assigneer}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.assigneer && Boolean(errors.assigneer)}
+                  helperText={touched.assigneer && errors.assigneer}
+                />
+                <TextField
+                  fullWidth
+                  label="Reporter"
+                  name="reporter"
+                  value={values.reporter}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.reporter && Boolean(errors.reporter)}
+                  helperText={touched.reporter && errors.reporter}
+                />
+                <TextField
+                  fullWidth
+                  label="Assigned Date"
+                  name="assignedDate"
+                  type="date"
+                  value={values.assignedDate}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.assignedDate && Boolean(errors.assignedDate)}
+                  helperText={touched.assignedDate && errors.assignedDate}
+                />
+                <TextField
+                  fullWidth
+                  label="Due Date"
+                  name="dueDate"
+                  type="date"
+                  value={values.dueDate}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.dueDate && Boolean(errors.dueDate)}
+                  helperText={touched.dueDate && errors.dueDate}
+                />
+                <TextField
+                  fullWidth
+                  label="Task Duration"
+                  name="taskDuration"
+                  value={values.taskDuration}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  error={touched.taskDuration && Boolean(errors.taskDuration)}
+                  helperText={touched.taskDuration && errors.taskDuration}
+                />
+                <DialogActions>
+                  <Button onClick={handleClose} variant="outlined">Cancel</Button>
+                  <Button type="submit" variant="outlined">{editTask ? "Update Task" : "Add Task"}</Button>
+                </DialogActions>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions className='action-btn'>
-          <Button className='model-cancel' onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button className='model-task' onClick={handleAddTask} >
-            Add Task
-          </Button>
-        </DialogActions>
       </Dialog>
     </Box>
   );
-}
+};
 
 export default MyTask;

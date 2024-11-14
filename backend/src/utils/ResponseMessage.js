@@ -11,7 +11,13 @@ const ResponseMessage = {
     GET_SINGLE_USER:"get user successfully",
     INVALID_REFRESH_TOKEN:"Invalid refersh token",
     REFRESH_TOKEN_SUCCESS:"Get refersh token ",
-    NO_REFRESH_TOKEN:"No referesh token pass"
+    NO_REFRESH_TOKEN:"No referesh token pass",
+    TASK_ADDED: "Task created successfully",
+    GETALL_TASK: "Get all task successfully",
+    GET_SINGLE_TASK: "Get single task successfully",
+    TASK_NOT_FOUND: "Task not found",
+    TASK_DELETED:"Task Deleted Successfully",
+     TASK_EDIT:"Task updated Successfully"
 }
 
 export { ResponseMessage };

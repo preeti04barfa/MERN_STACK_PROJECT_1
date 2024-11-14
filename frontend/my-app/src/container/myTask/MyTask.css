@@ -92,3 +92,31 @@
 .action-btn .model-task{
     color:  #646faf;
 }
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 4px;
+  }
+  
+  .edit{
+    color:rgb(55, 49, 49);
+    padding-right: 4px;
+    cursor: pointer;
+  }
+
+  .edit:hover{
+    color:rgb(18, 18, 18);
+    padding-right: 4px;
+    cursor: pointer;
+  }
+
+  .delete{
+    color:rgb(227, 95, 95);
+    cursor: pointer;
+  }
+
+  .delete:hover{
+    color:rgb(196, 13, 13);
+    cursor: pointer;
+  }

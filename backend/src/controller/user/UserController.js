@@ -4,7 +4,7 @@ dotenv.config();
 export const RegisterUser = async (req, res) => {
     try {
         const { name, email, number, password } = req.body;
-        const findEmail = await User.findOne({ email, isDelete:0 });
+        const findEmail = await User.findOne({ email, isDelete:0 }); 
         if (findEmail) {
             return sendResponse(
                 res,
@@ -56,7 +56,7 @@ export const userLogin = async (req, res) => {
         }
 
         const payload = { userId: user._id };
-        const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1m' });
+        const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' });
         const refreshToken = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '7d' });
 
         return sendResponse(

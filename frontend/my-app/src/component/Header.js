@@ -18,6 +18,9 @@ const Header = () => {
       fetchUserData(getToken);
     }
   }, []);
+const defaultUser = localStorage.getItem("userDataCredential")&& JSON.parse(localStorage.getItem("userDataCredential"))
+console.log(defaultUser?.name,"jhfbavhf");
+
 
 
   const fetchUserData = async (token) => {
@@ -53,7 +56,7 @@ const Header = () => {
       <Box className="icons">
         <Box className="user-profile">
           <h3 className='welcome'>Welcome!</h3>
-          <h3 className='user-name'>{name}</h3>
+          <h3 className='user-name'>{name || defaultUser?.name }</h3>
           <img src={avtar} alt="avatar" className="avatar-img"></img>
         </Box>
         <Box>
