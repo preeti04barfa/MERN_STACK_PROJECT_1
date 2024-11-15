@@ -18,34 +18,47 @@ import { DataService } from '../../config/DataService';
 import { Api } from '../../config/Api';
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 const MyTask = () => {
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [currentTaskId, setCurrentTaskId] = useState(null); 
-  const [editTask, setEditTask] = useState(null); 
-  const [taskData, setTaskData] = useState(null);
+  const [currentTaskId, setCurrentTaskId] = useState(null);
+  const [editTask, setEditTask] = useState(null);
+  const [taskData, setTaskData] = useState([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteTaskId, setDeleteTaskId] = useState(null);
   const navigate = useNavigate();
 
   const initialValues = {
-    projectName: editTask?.projectName ? editTask?.projectName: '',
-    issueType: editTask?.issueType ? editTask?.issueType: '',
-    shortSummary: editTask?.shortSummary ? editTask?.shortSummary: '',
-    description: editTask?.description ? editTask?.description: '',
-    priority: editTask?.priority ? editTask?.priority: '',
-    assigneer: editTask?.assigneer ? editTask?.assigneer: '',
-    reporter: editTask?.reporter ? editTask?.reporter: '',
-    assignedDate: editTask?.assignedDate ? editTask?.assignedDate: '',
-    dueDate: editTask?.dueDate ? editTask?.dueDate: '',
-    taskDuration: editTask?.taskDuration ? editTask?.taskDuration: '',
+    projectName: editTask?.projectName ? editTask?.projectName : '',
+    issueType: editTask?.issueType ? editTask?.issueType : '',
+    shortSummary: editTask?.shortSummary ? editTask?.shortSummary : '',
+    description: editTask?.description ? editTask?.description : '',
+    priority: editTask?.priority ? editTask?.priority : '',
+    assigneer: editTask?.assigneer ? editTask?.assigneer : '',
+    reporter: editTask?.reporter ? editTask?.reporter : '',
+    assignedDate: editTask?.assignedDate ? moment(editTask?.assignedDate).format('YYYY-MM-DD') : '',
+    dueDate: editTask?.dueDate ? moment(editTask?.dueDate).format('YYYY-MM-DD') : '',
+
+    taskDuration: editTask?.taskDuration ? editTask?.taskDuration : '',
   }
+  const startSpace = /^(?!\s).*$/;
+  const space = /^(?!.* {2}).*$/;
   const validationSchema = Yup.object({
-    projectName: Yup.string().required('Project name is required'),
-    issueType: Yup.string().required('Issue type is required'),
-    shortSummary: Yup.string().required('Short summary is required'),
-    description: Yup.string().required('Description is required'),
-    priority: Yup.string().required('Priority is required'),
-    assigneer: Yup.string().required('Assigneer is required'),
-    reporter: Yup.string().required('Reporter is required'),
+    projectName: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Project name is required'),
+    issueType: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Issue type is required'),
+    shortSummary: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Short summary is required'),
+    description: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Description is required'),
+    priority: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Priority is required'),
+    assigneer: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Assigneer is required'),
+    reporter: Yup.string().matches(startSpace, 'No leading spaces allowed')
+      .matches(space, 'No consecutive spaces allowed').required('Reporter is required'),
     assignedDate: Yup.string().required('Assigned Date is required'),
     dueDate: Yup.string().required('Due Date is required'),
     taskDuration: Yup.number().required('Task Duration is required'),
@@ -62,10 +75,21 @@ const MyTask = () => {
     setOpen(false);
   };
 
-  const handleEditTask = (data)=>{
+  const handleEditTask = (data) => {
     setEditTask(data)
     setOpen(true);
   }
+
+  const handleOpenDelete = (taskId) => {
+    setDeleteTaskId(taskId);
+    setOpenDelete(true);
+  };
+
+
+  const handleCloseDelete = () => {
+    setDeleteTaskId(null);
+    setOpenDelete(false);
+  };
 
   const fetchTaskData = async () => {
     const token = localStorage.getItem('userToken')
@@ -92,7 +116,7 @@ const MyTask = () => {
 
   const handleFormSubmit = async (values) => {
     try {
-      let data = {...values}
+      let data = { ...values }
       if (editTask) {
         data = { ...data, id: editTask?._id }
       }
@@ -102,7 +126,7 @@ const MyTask = () => {
 
       toast.success(response.data.message);
       fetchTaskData();
-     handleClose()
+      handleClose()
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         toast.error(error.response.data.message);
@@ -110,33 +134,26 @@ const MyTask = () => {
         toast.error("An unexpected error occurred");
       }
     }
-  
+
   };
 
-  const handleDeleteSubmit = async (taskId) => {
+  const handleDeleteTask = async () => {
     try {
       const token = localStorage.getItem('userToken');
       const response = await DataService.post(
         Api.DELETE_TASK,
-        { id: taskId },
-        {
-          headers: {
-            'auth': token,
-          }
-        }
+        { id: deleteTaskId },
+        { headers: { auth: token } }
       );
       toast.success(response.data.message);
       fetchTaskData();
-
+      handleCloseDelete();
     } catch (error) {
-      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+      toast.error(
+        error.response?.data?.message || 'An error occurred while deleting the task.'
+      );
     }
   };
-
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -217,15 +234,15 @@ const MyTask = () => {
               <tr key={task?._id}>
                 <td>{task.projectName}</td>
                 <td>{task.shortSummary}</td>
-                <td>{task.assignedDate}</td>
-                <td>{task.dueDate}</td>
+                <td>{moment(task.assignedDate).format('DD-MM-YYYY')}</td>
+                <td>{moment(task.dueDate).format('DD-MM-YYYY')}</td>
                 <td>{task.assigneer}</td>
                 <td>{task.reporter}</td>
                 <td>{task.taskDuration}</td>
                 <td> <EditIcon className='edit' onClick={() => handleEditTask(task)} />
                   <DeleteIcon
                     className='delete'
-                    onClick={() => handleDeleteSubmit(task._id)}
+                    onClick={() => handleOpenDelete(task._id)}
                   />
 
                 </td>
@@ -236,7 +253,7 @@ const MyTask = () => {
       </Box>
 
       <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{editTask ? "Edit Task" : "Add New Task"}</DialogTitle>
+        <DialogTitle>{editTask ? "Edit Task" : "Add New Task"}</DialogTitle>
         <DialogContent>
           <Formik
             initialValues={initialValues}
@@ -366,6 +383,19 @@ const MyTask = () => {
           </Formik>
         </DialogContent>
       </Dialog>
+      <Dialog open={openDelete} onClose={handleCloseDelete}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to delete this task?</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete}>Cancel</Button>
+          <Button onClick={handleDeleteTask} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 };
