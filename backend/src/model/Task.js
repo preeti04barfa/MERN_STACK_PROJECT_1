@@ -8,7 +8,6 @@ const taskSchema = new mongoose.Schema({
     issueType: {
         type: String,
         required: false,
-        enum: ["Task", "Bug"]
     },
     shortSummary: {
         type: String,
@@ -21,7 +20,6 @@ const taskSchema = new mongoose.Schema({
     priority: {
         type: String,
         required: false,
-        enum: ["Medium", "High", "Low"]
     },
     assigneer: {
         type:String,
