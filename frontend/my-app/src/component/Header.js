@@ -47,6 +47,7 @@ console.log(defaultUser?.name,"jhfbavhf");
     localStorage.removeItem('userToken');
     localStorage.removeItem('userRefreshToken');
     localStorage.removeItem('userDataCredential');
+    toast.success("Logout successfully");
     navigate("/");
   };
 

@@ -22,11 +22,13 @@ const taskSchema = new mongoose.Schema({
         required: false,
     },
     assigneer: {
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
         required: false
     },
     reporter: {
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
         required: false
     },
     assignedDate: {

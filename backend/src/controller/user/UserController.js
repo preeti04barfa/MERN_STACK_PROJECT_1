@@ -1,10 +1,10 @@
-import {bcrypt, dotenv, jwt, ResponseMessage, StatusCodes, handleErrorResponse, sendResponse, User} from "../../index.js";
+import { bcrypt, dotenv, jwt, ResponseMessage, StatusCodes, handleErrorResponse, sendResponse, User } from "../../index.js";
 dotenv.config();
 
 export const RegisterUser = async (req, res) => {
     try {
         const { name, email, number, password } = req.body;
-        const findEmail = await User.findOne({ email, isDelete:0 }); 
+        const findEmail = await User.findOne({ email, isDelete: 0 });
         if (findEmail) {
             return sendResponse(
                 res,
@@ -15,7 +15,7 @@ export const RegisterUser = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
-            name, email, number,  
+            name, email, number,
             password: hashedPassword
         });
         const savedUser = await newUser.save();
@@ -41,7 +41,7 @@ export const userLogin = async (req, res) => {
                 res,
                 StatusCodes.BAD_REQUEST,
                 ResponseMessage.USER_NOT_EXISTS,
-               []
+                []
             );
         }
 
@@ -51,7 +51,7 @@ export const userLogin = async (req, res) => {
                 res,
                 StatusCodes.UNAUTHORIZED,
                 ResponseMessage.INCORRECT_CREDENTIALS,
-               []
+                []
             );
         }
 
@@ -63,7 +63,7 @@ export const userLogin = async (req, res) => {
             res,
             StatusCodes.OK,
             ResponseMessage.LOGIN_SUCCESSFULLY,
-            { token, refreshToken } 
+            { token, refreshToken }
         );
 
     } catch (error) {
@@ -74,7 +74,7 @@ export const userLogin = async (req, res) => {
 
 export const refreshToken = async (req, res) => {
     try {
-        const { refreshToken } = req.body; 
+        const { refreshToken } = req.body;
 
         if (!refreshToken) {
             return sendResponse(
@@ -113,7 +113,7 @@ export const refreshToken = async (req, res) => {
                 res,
                 StatusCodes.OK,
                 ResponseMessage.REFRESH_TOKEN_SUCCESS,
-                { token: newAccessToken } 
+                { token: newAccessToken }
             );
         });
     } catch (error) {
@@ -125,7 +125,7 @@ export const refreshToken = async (req, res) => {
 
 export const getSingleUser = async (req, res) => {
     try {
-        const user = await User.findOne({ _id:  req.user_id, isDelete: 0  });
+        const user = await User.findOne({ _id: req.user_id, isDelete: 0 });
         if (!user) {
             return res.status(400).json({
                 status: StatusCodes.BAD_REQUEST,
@@ -144,4 +144,24 @@ export const getSingleUser = async (req, res) => {
     }
 };
 
-
+export const getAllUser = async (req, res) => {
+    try {
+        const user = await User.find({ isDelete: 0 });
+        if (user) {
+            return sendResponse(
+                res,
+                StatusCodes.OK,
+                "Get all user",
+                user
+            );
+        }
+        return sendResponse(
+            res,
+            StatusCodes.NOT_FOUND,
+            "User not found",
+            []
+        )
+    } catch (error) {
+        return handleErrorResponse(res, error);
+    }
+};

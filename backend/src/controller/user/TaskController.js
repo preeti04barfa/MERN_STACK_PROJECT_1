@@ -21,7 +21,7 @@ export const createTask = async (req, res) => {
 
 export const getTask = async (req, res) => {
     try {
-        const findTask = await Task.find({ isDelete: false });
+        const findTask = await Task.find({ isDelete: false, reporter: req.user_id}).populate('assigneer').populate('reporter')
 
         if (findTask) {
             return sendResponse(
