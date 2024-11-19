@@ -37,7 +37,7 @@ const MyTask = () => {
   console.log(tasks, "jhfbavhf11t");
   const userName = defaultUser?._id;
 
-console.log(editTask,"editTask");
+  console.log(editTask, "editTask");
 
 
   const initialValues = {
@@ -46,8 +46,8 @@ console.log(editTask,"editTask");
     shortSummary: editTask?.shortSummary ? editTask?.shortSummary : '',
     description: editTask?.description ? editTask?.description : '',
     priority: editTask?.priority ? editTask?.priority : '',
-    assigneer: editTask?.assigneer? editTask?.assigneer?._id : '',
-    reporter: editTask?.reporter? editTask?.reporter?._id : userName,
+    assigneer: editTask?.assigneer ? editTask?.assigneer?._id : '',
+    reporter: editTask?.reporter ? editTask?.reporter?._id : userName,
     assignedDate: editTask?.assignedDate ? moment(editTask?.assignedDate).format('YYYY-MM-DD') : '',
     dueDate: editTask?.dueDate ? moment(editTask?.dueDate).format('YYYY-MM-DD') : '',
 
@@ -397,7 +397,7 @@ console.log(editTask,"editTask");
                   margin="normal"
                   error={touched.reporter && Boolean(errors.reporter)}
                   helperText={touched.reporter && errors.reporter}
-                  >{userData.map((user) => (
+                >{userData.map((user) => (
                   <MenuItem key={user._id} value={user._id}>
                     {user.name}
                   </MenuItem>
@@ -414,6 +414,12 @@ console.log(editTask,"editTask");
                   margin="normal"
                   error={touched.assignedDate && Boolean(errors.assignedDate)}
                   helperText={touched.assignedDate && errors.assignedDate}
+                  InputLabelProps={{
+                    shrink: true, 
+                  }}
+                  inputProps={{
+                    min: new Date().toISOString().split("T")[0],
+                  }}
                 />
                 <TextField
                   fullWidth
@@ -427,6 +433,12 @@ console.log(editTask,"editTask");
                   margin="normal"
                   error={touched.dueDate && Boolean(errors.dueDate)}
                   helperText={touched.dueDate && errors.dueDate}
+                  InputLabelProps={{
+                    shrink: true, 
+                  }}
+                  inputProps={{
+                    min: new Date().toISOString().split("T")[0],
+                  }}
                 />
                 <TextField
                   fullWidth

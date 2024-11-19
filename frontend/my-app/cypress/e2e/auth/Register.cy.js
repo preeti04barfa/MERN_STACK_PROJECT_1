@@ -62,7 +62,7 @@ describe('Register spec', () => {
   it('submits the form with valid inputs', () => {
     cy.get('input[name="name"]').type('John');
     cy.get('input[name="number"]').type('9876543210');
-    cy.get('input[name="email"]').type('g15k@example.com');
+    cy.get('input[name="email"]').type('ak@example.com');
     cy.get('input[name="password"]').type('Pass@123');
 
     cy.get('button[type="submit"]').click();

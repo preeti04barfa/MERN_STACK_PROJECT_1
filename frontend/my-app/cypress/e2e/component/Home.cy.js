@@ -70,16 +70,27 @@ describe('Header Component Tests', () => {
      cy.get('.MuiFormHelperText-root').should('contain', 'Task Duration is required');
 
      cy.get('input[name="projectName"]').type('Zaverica');
-     cy.get('#issue').type('Task');
-     cy.wait(4000);
+cy.wait(3000)
+     cy.get('#issue').click()
+     cy.get('[data-value="Medium"]').click()
+    //  cy.get('#issue').click();
+    //  cy.get('#\:r19\: > [tabindex="0"]').click();
+     cy.wait(2000);
+    //  cy.get("[name=issue]").should("have.value", "Task");
      cy.get('input[name="shortSummary"]').type('Nothing');
      cy.get('input[name="description"]').type('Noting nothing');
-     cy.get('#priority').type('Low');
+
+     cy.get('#priority').click()
+     cy.get('[data-value="Low"]').click()
+    //  cy.get('#priority').type('Low');
      cy.wait(4000)
-     cy.get('#assigneer').type('Preeti');
+
+     cy.get('#assigneer').click()
+     cy.get('[data-value="673473dc64ab7464c14ea23d"]').click()
+    //  cy.get('#assigneer').type('Preeti');
      cy.wait(4000)
-     cy.get('#reporter').type('Preeti');
-     cy.wait(4000)
+    //  cy.get('#reporter').type('Preeti');
+    //  cy.wait(4000)
     cy.get('#assignedDate').type('2024-11-11');
     cy.get('#dueDate').type('2024-11-11');
      cy.get('input[name="taskDuration"]').type(8);
@@ -89,8 +100,9 @@ describe('Header Component Tests', () => {
      cy.wait(3000)
      cy.get(':nth-child(1) > :nth-child(8) > [data-testid="EditIcon"]').click();
 
-     cy.get('input[name="priority"]').type('High');
-     cy.get('input[name="assigneer"]').type('Preeti Barfa');
+     cy.get('#priority').click()
+     cy.get('[data-value="High"]').click()
+     cy.get('input[name="taskDuration"]').type(4);
      cy.get('button[type="submit"]').click();
     //  cy.wait(2000)
     //  cy.get('.Toastify__toast--success').should('contain', 'Task updated successfully');
