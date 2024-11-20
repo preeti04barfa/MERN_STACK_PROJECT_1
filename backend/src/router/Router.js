@@ -1,9 +1,10 @@
 import { createTask, deleteTask, editTask, getSingleTask, getTask } from "../controller/user/TaskController.js";
-import { auth, express, getSingleUser, refreshToken, RegisterUser, userLogin } from "../index.js"
+import { auth, express, getAllUser, getSingleUser, refreshToken, RegisterUser, userLogin } from "../index.js"
 
 const userRouter = express.Router()
 userRouter.post("/user-add",RegisterUser);
 userRouter.post("/user-login",userLogin);
+userRouter.get("/get-all-user",getAllUser);
 userRouter.get("/get-single-user",auth, getSingleUser);
 userRouter.post("/referesh-token", refreshToken);
 userRouter.post("/task-create",auth, createTask);

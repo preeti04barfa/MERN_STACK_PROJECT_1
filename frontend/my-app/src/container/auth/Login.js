@@ -46,7 +46,7 @@ const Login = () => {
       localStorage.setItem('userToken', userToken);
       localStorage.setItem('userRefreshToken', userRefreshToken);
       toast.success(response.data.message);
-      navigate("admin/");
+      navigate("admin/dashboard");
 
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
@@ -130,7 +130,7 @@ const Login = () => {
                 </Box>
 
                 <Box className="register-actions">
-                  <p>Don't have an account?</p>
+                  <p>Do not have an account?</p>
                   <a
                     href="#"
                     className="forgot-password"

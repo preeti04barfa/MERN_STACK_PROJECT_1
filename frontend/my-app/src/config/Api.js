@@ -8,6 +8,7 @@ const Api = {
     GET_ALL_TASK:"/api/user/get-task",
     GET_SINGLE_TASK:"/api/user/get-single-task",
     DELETE_TASK:"/api/user/delete-task",
+    GET_ALL_USER:"/api/user//get-all-user",
    common: {
      BASE_URL: "http://localhost:3008"
    },
